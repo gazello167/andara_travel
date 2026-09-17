@@ -86,7 +86,19 @@ export const config: Config<Props> = {
         },
         backgroundColor: { type: "text" },
         backgroundImage: { type: "text" }, // isi URL gambar
-        overlayOpacity: { type: "number", min: 0, max: 1, step: 0.1 },
+        overlayOpacity: {
+          type: "custom",
+          render: ({ value, onChange }) => (
+           <input
+             type="number"
+             min={0}
+             max={1}
+             step={0.1}
+             value={value ?? 0.5}
+             onChange={(e) => onChange(parseFloat(e.target.value))}
+          />
+        ),
+      },
         textColor: { type: "text" },
       },
       defaultProps: {
