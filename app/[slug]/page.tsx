@@ -3,22 +3,28 @@ import { config } from "@/lib/puck-config";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
-// Ini halaman yang dilihat pengunjung biasa. Tidak ada JSX hardcode
-// per halaman di sini — satu file ini melayani SEMUA slug, karena
-// isinya diambil dari database (hasil drag & drop di /edit/[slug]).
-
-export const dynamic = "force-dynamic"; // selalu ambil data terbaru
+// Paksa halaman ini dirender secara dinamis (abaikan Static Site Generation saat build)
+export const dynamic = "force-dynamic";
 
 export default async function PublicPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }> | { slug: string };
 }) {
-  const page = await prisma.page.findUnique({ where: { slug: params.slug } });
+  const resolvedParams = await params;
 
-  if (!page || !page.published) {
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug: resolvedParams.slug },
+    });
+
+    if (!page || !page.published) {
+      notFound();
+    }
+
+    return <Render config={config} data={page.content as any} />;
+  } catch (error) {
+    // Jika database belum terhubung atau bermasalah saat request, kembalikan 404 agar tidak merusak server
     notFound();
   }
-
-  return <Render config={config} data={page.content as any} />;
 }
