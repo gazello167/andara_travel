@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <div style={{ padding: 60, maxWidth: 640, margin: "0 auto" }}>

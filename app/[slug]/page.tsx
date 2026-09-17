@@ -3,8 +3,13 @@ import { config } from "@/lib/puck-config";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
-// Paksa halaman ini dirender secara dinamis (abaikan Static Site Generation saat build)
+// Mencegah SSG mencoba membuat halaman saat build time
 export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function PublicPage({
   params,
