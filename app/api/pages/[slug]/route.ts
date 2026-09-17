@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// Mencegah Next.js melakukan prerender statis halaman ini saat proses npm run build
+export const dynamic = "force-dynamic";
+
 // GET  /api/pages/[slug]  -> ambil data JSON halaman (untuk editor & publik)
 // PUT  /api/pages/[slug]  -> simpan hasil drag & drop dari editor
 
