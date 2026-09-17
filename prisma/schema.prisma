@@ -1,0 +1,22 @@
+// Prisma schema — satu tabel Page yang menyimpan seluruh isi halaman
+// sebagai JSON (hasil drag & drop dari Puck editor). Tidak ada tabel
+// terpisah per jenis halaman — semua fleksibel lewat kolom `content`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // ganti ke "sqlite" kalau mau coba lokal cepat
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String   @default("Untitled Page")
+  content   Json     // struktur Puck: { root: {...}, content: [...] }
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
